@@ -16,12 +16,15 @@ const baseURL =
 
 // Trust the production domain AND the current deployment/preview URL, so sign-in
 // works whether the site is opened via the clean domain or a *.vercel.app URL —
-// without anyone having to set BETTER_AUTH_URL by hand.
+// without anyone having to set BETTER_AUTH_URL by hand. On Vercel we also trust
+// any *.vercel.app subdomain (better-auth supports wildcard origin patterns), so
+// preview/alias URLs like autohaus-copy.vercel.app work out of the box too.
 const trustedOrigins = [
   process.env.BETTER_AUTH_URL,
   process.env.NEXT_PUBLIC_APP_URL,
   vercelProd ? `https://${vercelProd}` : undefined,
   vercelUrl ? `https://${vercelUrl}` : undefined,
+  process.env.VERCEL ? "https://*.vercel.app" : undefined,
 ].filter((v): v is string => Boolean(v));
 const secret =
   process.env.BETTER_AUTH_SECRET ??
