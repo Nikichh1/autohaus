@@ -217,6 +217,11 @@ Copy `.env.example` → `.env` for local dev, and set the same keys in
 | `BETTER_AUTH_SECRET` | yes | Generate with `openssl rand -hex 32` |
 | `BETTER_AUTH_URL` | rec. | Your production URL (stable auth cookies) |
 | `NEXT_PUBLIC_APP_URL` | rec. | Same production URL |
+| `R2_ACCOUNT_ID` | uploads | Cloudflare R2 — see below |
+| `R2_ACCESS_KEY_ID` | uploads | Cloudflare R2 API token |
+| `R2_SECRET_ACCESS_KEY` | uploads | Cloudflare R2 API token |
+| `R2_BUCKET` | uploads | R2 bucket name |
+| `R2_PUBLIC_URL` | uploads | R2 public URL (r2.dev or custom domain) |
 
 ### 3. Deploy to Vercel
 1. Push the repo to GitHub and **Import** it in Vercel (framework auto-detected as
@@ -238,12 +243,27 @@ This creates/promotes a `super_admin`. Override credentials with `ADMIN_EMAIL` /
 > Update `metadataBase` in `app/layout.tsx` and the base URL in `sitemap.ts` /
 > `robots.ts` if your production domain differs from `https://autohaus.bg`.
 
-### ⚠️ File uploads on Vercel
-Admin image/audio uploads currently write to `public/uploads` on the local
-filesystem (`lib/admin/storage.ts`). **Vercel's filesystem is read-only and
-ephemeral**, so uploads won't persist in production. Before relying on uploads, swap
-the body of `saveImage()` / `saveAudio()` for an object store (Vercel Blob, S3, or
-Cloudflare R2) — the call sites don't change.
+### File uploads (Cloudflare R2)
+Admin image/audio uploads are handled by `lib/admin/storage.ts`, which has two
+interchangeable drivers chosen automatically by the environment:
+
+- **No `R2_*` env vars** → writes to `/public/uploads` (great for local dev).
+- **`R2_*` env vars set** → uploads to a Cloudflare R2 bucket and serves from its
+  public URL. **Required on Vercel**, whose filesystem is read-only and ephemeral.
+
+R2's free tier is **10 GB storage with no egress fees**. One-time setup:
+
+1. [dash.cloudflare.com](https://dash.cloudflare.com) → **R2** → **Create bucket**
+   (e.g. `autohaus`). _(R2 asks for a card to verify, but the free tier is $0.)_
+2. Open the bucket → **Settings** → **Public access** → enable the **r2.dev**
+   subdomain (or attach a custom domain). Copy that URL → `R2_PUBLIC_URL`.
+3. **R2** → **Manage API Tokens** → **Create API Token** with *Object Read & Write*
+   → copy the **Access Key ID** and **Secret Access Key**.
+4. Your **Account ID** is shown on the R2 overview page.
+5. Set `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET`,
+   `R2_PUBLIC_URL` in Vercel → Settings → Environment Variables, then redeploy.
+
+No app code changes are needed to switch drivers — only the env vars.
 
 ---
 
