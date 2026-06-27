@@ -3,10 +3,26 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { nextCookies } from "better-auth/next-js";
 import { prisma } from "@/lib/db";
 
+// On Vercel, VERCEL_PROJECT_PRODUCTION_URL is the STABLE production domain
+// (e.g. autohaus.vercel.app); VERCEL_URL is the unique per-deployment URL.
+// Prefer an explicit override, then the stable production domain.
+const vercelProd = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+const vercelUrl = process.env.VERCEL_URL;
 const baseURL =
   process.env.BETTER_AUTH_URL ??
   process.env.NEXT_PUBLIC_APP_URL ??
-  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined);
+  (vercelProd ? `https://${vercelProd}` : undefined) ??
+  (vercelUrl ? `https://${vercelUrl}` : undefined);
+
+// Trust the production domain AND the current deployment/preview URL, so sign-in
+// works whether the site is opened via the clean domain or a *.vercel.app URL —
+// without anyone having to set BETTER_AUTH_URL by hand.
+const trustedOrigins = [
+  process.env.BETTER_AUTH_URL,
+  process.env.NEXT_PUBLIC_APP_URL,
+  vercelProd ? `https://${vercelProd}` : undefined,
+  vercelUrl ? `https://${vercelUrl}` : undefined,
+].filter((v): v is string => Boolean(v));
 const secret =
   process.env.BETTER_AUTH_SECRET ??
   process.env.NEXT_PUBLIC_BETTER_AUTH_SECRET ??
@@ -27,6 +43,7 @@ export const auth = betterAuth({
   appName: "AutoHaus Admin",
   secret,
   baseURL,
+  ...(trustedOrigins.length ? { trustedOrigins } : {}),
   database: prismaAdapter(prisma, { provider: "postgresql" }),
 
   emailAndPassword: {
