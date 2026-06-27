@@ -191,7 +191,7 @@ export function VehicleTable({
                     />
                   </td>
                   <td className="px-2 py-2.5">
-                    <Link href={`/admin/vehicles/${row.id}`} className="flex items-center gap-3">
+                    <Link href={`/admin/vehicles/${row.id}`} prefetch={false} className="flex items-center gap-3">
                       <span className="relative h-11 w-16 shrink-0 overflow-hidden rounded-md bg-elevated">
                         {row.imageUrl ? (
                           // eslint-disable-next-line @next/next/no-img-element
@@ -445,6 +445,7 @@ function MenuLink({
   return (
     <Link
       href={href}
+      prefetch={false}
       className="flex w-full items-center gap-2.5 px-3.5 py-2 text-sm text-fg-muted transition-colors hover:bg-white/5 hover:text-fg"
     >
       {icon}
