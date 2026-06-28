@@ -58,7 +58,7 @@ export function FinancingCalculator({
       </h3>
 
       <div className="mt-8 grid gap-8 md:grid-cols-2">
-        <div className="space-y-8">
+        <div className="range-accent space-y-8">
           {/* Down payment */}
           <div>
             <div className="flex items-center justify-between">
@@ -92,10 +92,15 @@ export function FinancingCalculator({
                   key={t}
                   type="button"
                   onClick={() => setTerm(t)}
+                  style={
+                    term === t
+                      ? { background: "linear-gradient(180deg,var(--va,var(--color-accent)),var(--va-deep,var(--color-accent-deep)))" }
+                      : undefined
+                  }
                   className={
-                    "rounded-full border px-4 py-2 text-sm transition-colors " +
+                    "rounded-full border px-4 py-2 text-sm tabular-nums transition-colors " +
                     (term === t
-                      ? "border-accent bg-accent text-ink"
+                      ? "border-accent text-white"
                       : "border-line-strong text-fg-muted hover:border-accent hover:text-fg")
                   }
                 >
@@ -106,27 +111,30 @@ export function FinancingCalculator({
           </div>
         </div>
 
-        {/* Result */}
-        <div className="flex flex-col justify-between rounded-xl border border-line-strong bg-gradient-to-b from-[#191c22] to-[#0f1216] p-6">
+        {/* Result — champagne */}
+        <div className="panel-gold flex flex-col justify-between rounded-xl p-6">
           <div>
-            <p className="label-fine text-fg-subtle">Месечна вноска от</p>
-            <p className="mt-2 font-display text-display-2xs font-extrabold tabular-nums text-titanium">
+            <p className="label-fine" style={{ color: "var(--vg-deep, var(--color-fg-subtle))" }}>
+              Месечна вноска от
+            </p>
+            <p className="text-gold-num mt-2 font-display text-display-2xs font-extrabold tabular-nums">
               {formatPriceEUR(monthly)}
             </p>
             <dl className="mt-6 space-y-2 text-sm">
               <div className="flex justify-between">
-                <dt className="text-fg-muted">Финансирана сума</dt>
-                <dd className="text-fg">{formatPriceEUR(financed)}</dd>
+                <dt style={{ color: "var(--vg-deep, var(--color-fg-muted))" }}>Финансирана сума</dt>
+                <dd className="tabular-nums" style={{ color: "var(--vg-pale, var(--color-fg))" }}>{formatPriceEUR(financed)}</dd>
               </div>
               <div className="flex justify-between">
-                <dt className="text-fg-muted">Лихва (год.)</dt>
-                <dd className="text-fg">{annualRatePct.toFixed(1)}%</dd>
+                <dt style={{ color: "var(--vg-deep, var(--color-fg-muted))" }}>Лихва (год.)</dt>
+                <dd style={{ color: "var(--vg-pale, var(--color-fg))" }}>{annualRatePct.toFixed(1)}%</dd>
               </div>
             </dl>
           </div>
           <Link
             href="/lizing"
-            className="group mt-6 inline-flex items-center gap-2 text-sm text-fg transition-colors hover:text-accent"
+            className="group mt-6 inline-flex items-center gap-2 text-sm transition-opacity hover:opacity-80"
+            style={{ color: "var(--vg, var(--color-accent))" }}
           >
             Пълно лизингово запитване
             <ArrowUpRight className="size-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />

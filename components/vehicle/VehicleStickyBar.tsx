@@ -25,41 +25,46 @@ export function VehicleStickyBar({
   });
 
   const label = `${vehicle.brand} ${vehicle.model}`;
+  const telHref = `tel:${phone.replace(/\s/g, "")}`;
 
   return (
     <AnimatePresence>
       {show && (
         <motion.div
-          initial={{ y: "110%" }}
+          initial={{ y: "130%" }}
           animate={{ y: 0 }}
-          exit={{ y: "110%" }}
+          exit={{ y: "130%" }}
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="edge-light fixed inset-x-0 bottom-0 z-40 border-t border-line-strong bg-base/80 backdrop-blur-2xl"
+          className="pointer-events-none fixed inset-x-0 bottom-0 z-40 flex justify-center px-3 pb-3 md:px-8"
         >
-          <div className="mx-auto flex max-w-wide items-center justify-between gap-4 px-4 py-3 md:px-8 xl:px-12">
-            <div className="min-w-0">
-              <p className="truncate text-sm font-medium text-fg">
+          <div className="glass-pane pointer-events-auto flex w-full max-w-wide items-center justify-between gap-4 rounded-full py-2.5 pl-5 pr-2.5 backdrop-blur-2xl backdrop-saturate-150 md:pl-7">
+            <div className="flex min-w-0 items-center gap-3">
+              <span className="truncate font-display text-sm font-bold text-fg">
                 {label}
                 {vehicle.variant && (
-                  <span className="text-fg-muted"> · {vehicle.variant}</span>
+                  <span className="font-medium text-fg-muted"> {vehicle.variant}</span>
                 )}
-              </p>
-              <p className="font-display text-base font-semibold text-accent">
+              </span>
+              <span className="shrink-0 font-display text-base font-extrabold text-accent">
                 {displayPrice(vehicle.price)}
-              </p>
+              </span>
             </div>
 
             <div className="flex shrink-0 items-center gap-2">
               <a
-                href={`tel:${phone.replace(/\s/g, "")}`}
-                className="inline-flex h-11 items-center gap-2 rounded-full border border-line-strong px-4 text-sm text-fg transition-colors hover:border-accent hover:text-accent"
+                href={telHref}
+                className="hidden h-11 items-center gap-2 rounded-full border border-line-strong px-4 text-sm font-medium text-fg transition-colors hover:border-accent hover:text-accent sm:inline-flex"
               >
                 <Phone className="size-4" />
-                <span className="hidden sm:inline">Обади се</span>
+                Обади се
               </a>
               <a
                 href="#inquiry"
-                className="inline-flex h-11 items-center gap-2 rounded-full bg-fg px-5 text-sm font-medium text-ink transition-colors hover:bg-accent"
+                style={{
+                  background:
+                    "linear-gradient(180deg,var(--va,var(--color-accent)),var(--va-deep,var(--color-accent-deep)))",
+                }}
+                className="inline-flex h-11 items-center gap-2 rounded-full px-5 text-sm font-semibold text-white"
               >
                 <CalendarCheck className="size-4" />
                 Запази оглед

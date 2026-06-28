@@ -27,12 +27,15 @@ export function EngineSoundPlayer({
   subtitle = "Истински запис",
   className,
   compact = false,
+  accent = false,
 }: {
   sound: EngineSound;
   title?: string;
   subtitle?: string;
   className?: string;
   compact?: boolean;
+  /** Use the accent colour for the play button (instead of the default light fill). */
+  accent?: boolean;
 }) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const barsRef = useRef<HTMLDivElement>(null);
@@ -131,14 +134,23 @@ export function EngineSoundPlayer({
           onClick={togglePlay}
           aria-label={playing ? "Пауза" : "Възпроизведи"}
           aria-pressed={playing}
+          style={
+            accent
+              ? { background: "linear-gradient(180deg,var(--va,var(--color-accent)),var(--va-deep,var(--color-accent-deep)))", color: "#fff" }
+              : undefined
+          }
           className={cn(
-            "relative flex shrink-0 items-center justify-center rounded-full bg-fg text-ink shadow-[0_10px_30px_-12px_rgba(0,0,0,0.6)] transition-transform duration-200 hover:scale-105 active:scale-95",
+            "relative flex shrink-0 items-center justify-center rounded-full shadow-[0_10px_30px_-12px_rgba(0,0,0,0.6)] transition-transform duration-200 hover:scale-105 active:scale-95",
+            accent ? "text-white" : "bg-fg text-ink",
             compact ? "size-12" : "size-14 sm:size-16",
           )}
         >
           {/* pulsing ring while playing */}
           {playing && (
-            <span className="absolute inset-0 animate-ping rounded-full bg-fg/30" style={{ animationDuration: "1.6s" }} />
+            <span
+              className={cn("absolute inset-0 animate-ping rounded-full", accent ? "bg-accent/30" : "bg-fg/30")}
+              style={{ animationDuration: "1.6s" }}
+            />
           )}
           {loading ? (
             <Loader2 className={cn("animate-spin", compact ? "size-5" : "size-6")} />

@@ -2,8 +2,35 @@ import type { Vehicle } from "@/types";
 import { formatNumber } from "@/lib/utils";
 import { fuelLabels, transmissionLabels, drivetrainLabels } from "@/lib/labels";
 
+/** Best-effort mapping of a free-text colour name (BG or EN) to a swatch colour.
+ *  Returns a CSS colour, or null when the name isn't recognised. */
+function colorSwatch(name: string): string | null {
+  const n = name.toLowerCase();
+  const table: Array<[RegExp, string]> = [
+    [/(черн|black|antrac|антрац)/, "#1c1f24"],
+    [/(бял|бяло|white)/, "#e9ebee"],
+    [/(сребрист|сребро|silver)/, "linear-gradient(150deg,#d6dadf,#9aa1a9)"],
+    [/(сив|сиво|grey|gray|графит|graphite)/, "#71777f"],
+    [/(тъмносин|navy|тъмно син)/, "#1b3a6b"],
+    [/(син|синьо|blue)/, "#2360cf"],
+    [/(бордо|bordeaux|винен)/, "#6b1f2a"],
+    [/(червен|red)/, "#b5392b"],
+    [/(зелен|green)/, "#2e7d46"],
+    [/(жълт|yellow)/, "#e3b53a"],
+    [/(оранж|orange)/, "#e06a2a"],
+    [/(кафяв|brown|шоколад)/, "#6b4423"],
+    [/(беж|beige|пясъч|sand)/, "#c9b18a"],
+    [/(злат|gold|шампан|champagne)/, "linear-gradient(150deg,#e6cf9a,#c9a86e)"],
+    [/(лилав|виолет|purple|violet)/, "#5b3b8c"],
+  ];
+  for (const [re, css] of table) if (re.test(n)) return css;
+  return null;
+}
+
 export function SpecTable({ vehicle }: { vehicle: Vehicle }) {
-  const rows: Array<[string, string | number | undefined]> = [
+  const swatch = vehicle.exteriorColor ? colorSwatch(vehicle.exteriorColor) : null;
+
+  const rows: Array<[string, React.ReactNode]> = [
     ["Година", vehicle.year],
     ["Пробег", `${formatNumber(vehicle.mileage)} км`],
     ["Двигател", vehicle.engineCC ? `${formatNumber(vehicle.engineCC)} см³` : undefined],
@@ -17,7 +44,21 @@ export function SpecTable({ vehicle }: { vehicle: Vehicle }) {
     ["Тип каросерия", vehicle.bodyType],
     ["Врати", vehicle.doors],
     ["Места", vehicle.seats],
-    ["Цвят екстериор", vehicle.exteriorColor],
+    [
+      "Цвят екстериор",
+      vehicle.exteriorColor ? (
+        <span className="flex items-center gap-2">
+          {swatch && (
+            <span
+              aria-hidden
+              className="size-3.5 shrink-0 rounded-full border border-white/25"
+              style={{ background: swatch }}
+            />
+          )}
+          {vehicle.exteriorColor}
+        </span>
+      ) : undefined,
+    ],
     ["Цвят интериор", vehicle.interiorColor],
     ["VIN", vehicle.vin],
   ];

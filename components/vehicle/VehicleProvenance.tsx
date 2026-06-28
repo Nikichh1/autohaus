@@ -31,8 +31,10 @@ export function VehicleProvenance({ vehicle }: { vehicle: Vehicle }) {
       <div className="lg:col-span-5">
         <FadeIn>
           <div className="flex items-center gap-3">
-            <ShieldCheck className="size-5 text-accent" strokeWidth={1.5} />
-            <p className="eyebrow text-fg-muted">Прозрачна история</p>
+            <ShieldCheck className="size-5" strokeWidth={1.5} style={{ color: "var(--vg, var(--color-accent))" }} />
+            <p className="eyebrow" style={{ color: "var(--vg-soft, var(--color-fg-muted))" }}>
+              Прозрачна история
+            </p>
           </div>
         </FadeIn>
         <Reveal>
@@ -67,7 +69,10 @@ export function VehicleProvenance({ vehicle }: { vehicle: Vehicle }) {
           {checks.map((c, i) => (
             <FadeIn key={c} delay={i * 0.06}>
               <li className="flex items-center gap-4 bg-gradient-to-b from-[#16191e] to-[#0f1216] px-6 py-5 transition-colors hover:from-[#1b1f25]">
-                <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-accent/10 text-accent">
+                <span
+                  className="flex size-7 shrink-0 items-center justify-center rounded-full"
+                  style={{ background: "rgb(var(--vg-glow, 201 169 97) / 0.12)", color: "var(--vg, var(--color-accent))" }}
+                >
                   <Check className="size-4" strokeWidth={2.5} />
                 </span>
                 <span className="text-sm text-fg">{c}</span>

@@ -3,14 +3,16 @@
 import { useState } from "react";
 import { Check } from "lucide-react";
 import { Input, Textarea } from "@/components/ui/Input";
-import { Button } from "@/components/ui/Button";
 
 export function VehicleInquiryForm({
   vehicleLabel,
   vehicleSlug,
+  bare = false,
 }: {
   vehicleLabel: string;
   vehicleSlug?: string;
+  /** Hide the built-in eyebrow + heading (the page supplies them in a left column). */
+  bare?: boolean;
 }) {
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
@@ -52,7 +54,7 @@ export function VehicleInquiryForm({
 
   if (sent) {
     return (
-      <div className="panel-glass edge-light flex flex-col items-start gap-4 rounded-[1.25rem] p-8 md:p-10">
+      <div className="panel-metal edge-light flex flex-col items-start gap-4 rounded-[1.25rem] p-8 md:p-10">
         <div className="flex size-12 items-center justify-center rounded-full bg-accent/15 text-accent">
           <Check className="size-6" />
         </div>
@@ -69,14 +71,18 @@ export function VehicleInquiryForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="panel-glass edge-light rounded-[1.25rem] p-6 md:p-10"
+      className="panel-metal edge-light rounded-[1.25rem] p-6 md:p-8"
     >
-      <p className="label-fine text-fg-subtle">Запитване</p>
-      <h3 className="mt-3 font-display text-2xl font-bold tracking-tight text-fg md:text-3xl">
-        Заявете оглед или попитайте за {vehicleLabel}
-      </h3>
+      {!bare && (
+        <>
+          <p className="label-fine text-fg-subtle">Запитване</p>
+          <h3 className="mt-3 font-display text-2xl font-bold tracking-tight text-fg md:text-3xl">
+            Заявете оглед или попитайте за {vehicleLabel}
+          </h3>
+        </>
+      )}
 
-      <div className="mt-8 grid gap-6 sm:grid-cols-2">
+      <div className={`grid gap-5 sm:grid-cols-2 ${bare ? "" : "mt-8"}`}>
         <Input name="name" label="Име" placeholder="Вашето име" required />
         <Input name="phone" label="Телефон" type="tel" placeholder="+359 ..." required />
         <Input
@@ -111,14 +117,16 @@ export function VehicleInquiryForm({
         </p>
       ) : null}
 
-      <div className="mt-8 flex flex-wrap items-center gap-4">
-        <Button type="submit" size="lg" variant="solid" arrow disabled={sending}>
-          {sending ? "Изпращане…" : "Изпрати запитване"}
-        </Button>
-        <p className="text-xs text-fg-subtle">
-          С изпращането се съгласявате с обработката на личните ви данни.
-        </p>
-      </div>
+      <button
+        type="submit"
+        disabled={sending}
+        className="btn-accent mt-6 flex h-[52px] w-full items-center justify-center rounded-full text-sm font-semibold disabled:opacity-60"
+      >
+        {sending ? "Изпращане…" : "Изпрати запитване"}
+      </button>
+      <p className="mt-3 text-xs text-fg-subtle">
+        С изпращането се съгласявате с обработката на личните ви данни.
+      </p>
     </form>
   );
 }

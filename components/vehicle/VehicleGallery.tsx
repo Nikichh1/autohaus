@@ -13,9 +13,11 @@ type VehicleGalleryProps = {
   /** `sizes` for the main (LCP) image. Defaults to full-bleed; pass the real
    *  rendered width when the stage sits in a column so phones fetch fewer bytes. */
   sizes?: string;
+  /** Horsepower — when set, renders an accent "X К.С." badge over the stage. */
+  power?: number;
 };
 
-export function VehicleGallery({ images, alt, sizes = "100vw" }: VehicleGalleryProps) {
+export function VehicleGallery({ images, alt, sizes = "100vw", power }: VehicleGalleryProps) {
   const [active, setActive] = useState(0);
   const [lightbox, setLightbox] = useState(false);
   const touchStartX = useRef<number | null>(null);
@@ -94,6 +96,17 @@ export function VehicleGallery({ images, alt, sizes = "100vw" }: VehicleGalleryP
             />
           </motion.div>
         </AnimatePresence>
+
+        {/* Power badge — accent, top-left */}
+        {power ? (
+          <div
+            className="absolute left-4 top-4 z-10 flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-[11px] font-bold tracking-wide text-white"
+            style={{ background: "var(--va, var(--color-accent))", boxShadow: "0 6px 18px -4px rgb(var(--va-glow, 0 0 0) / 0.7)" }}
+          >
+            <span className="size-1.5 rounded-full bg-white" />
+            {power} К.С.
+          </div>
+        ) : null}
 
         {/* Expand hint */}
         <div className="absolute right-5 top-5 z-10 flex size-10 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white opacity-0 backdrop-blur-md transition-opacity duration-300 group-hover:opacity-100">
