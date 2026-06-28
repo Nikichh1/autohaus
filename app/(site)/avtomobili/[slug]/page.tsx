@@ -11,7 +11,8 @@ import { fuelLabels, transmissionLabels, drivetrainLabels } from "@/lib/labels";
 import { contactInfo } from "@/lib/nav";
 import { CinematicHero } from "@/components/vehicle/CinematicHero";
 import { ProductLoader } from "@/components/vehicle/ProductLoader";
-import { VehicleGalleryMosaic } from "@/components/vehicle/VehicleGalleryMosaic";
+import { VehicleScrollGallery } from "@/components/vehicle/VehicleScrollGallery";
+import { Marquee } from "@/components/motion/Marquee";
 import { SpecTable } from "@/components/vehicle/SpecTable";
 import { FinancingCalculator } from "@/components/vehicle/FinancingCalculator";
 import { VehicleInquiryForm } from "@/components/vehicle/VehicleInquiryForm";
@@ -207,7 +208,7 @@ export default async function VehicleDetailPage({ params }: PageProps) {
               <div className="relative aspect-[4/3] overflow-hidden">
                 <BlurImage src={detailImage} alt={`${fullLabel} — детайл`} fill sizes="(min-width:1024px) 45vw, 100vw" className="object-cover transition-transform duration-[1100ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.04]" />
                 {vehicle.engineSound && (
-                  <span className="absolute bottom-4 left-4 flex size-12 items-center justify-center rounded-full bg-white text-ink shadow-lg">
+                  <span className="absolute bottom-4 left-4 flex size-12 items-center justify-center rounded-full bg-fg text-base shadow-lg">
                     <Play className="size-5 translate-x-0.5 fill-current" aria-hidden />
                   </span>
                 )}
@@ -230,7 +231,7 @@ export default async function VehicleDetailPage({ params }: PageProps) {
           <div className="flex flex-col justify-center">
             <FadeIn>
               <span className="vd-eyebrow">[ За автомобила ]</span>
-              <h2 className="mt-4 font-display text-[clamp(1.9rem,3.6vw,3rem)] font-extrabold uppercase leading-[0.98] tracking-tight text-fg">
+              <h2 className="mt-4 font-mega text-[clamp(2.1rem,4vw,3.4rem)] leading-[0.95] text-fg">
                 {aboutHeadline}
               </h2>
               <p className="mt-5 max-w-md text-[15px] leading-relaxed text-fg-muted">{descText}</p>
@@ -254,22 +255,25 @@ export default async function VehicleDetailPage({ params }: PageProps) {
         </div>
       </section>
 
-      {/* ═══════════  GALLERY (light bento)  ═══════════ */}
-      <section id="galeriya" className="scroll-mt-24 bg-elevated py-20 md:py-28">
-        <div className="mx-auto max-w-wide px-4 md:px-8 xl:px-12">
+      {/* ═══════════  MARQUEE  ═══════════ */}
+      <div className="overflow-hidden border-y border-line bg-base py-4 md:py-6">
+        <Marquee text={`${vehicle.brand} ${vehicle.model}`} durationSec={32} className="font-mega text-stroke text-[clamp(2.4rem,7vw,5.5rem)]" />
+      </div>
+
+      {/* ═══════════  GALLERY (horizontal scroll)  ═══════════ */}
+      <section id="galeriya" className="scroll-mt-24 bg-elevated pt-16 md:pt-24">
+        <div className="mx-auto mb-8 max-w-wide px-4 md:mb-10 md:px-8 xl:px-12">
           <FadeIn>
-            <div className="mb-9 flex items-end justify-between gap-6">
+            <div className="flex items-end justify-between gap-6">
               <div>
                 <span className="vd-eyebrow">[ Галерия ]</span>
-                <h2 className="mt-3 font-display text-[clamp(1.9rem,4vw,3.2rem)] font-extrabold uppercase leading-none tracking-tight text-fg">
-                  Всеки ъгъл
-                </h2>
+                <h2 className="mt-3 font-mega text-[clamp(2rem,5vw,3.6rem)] text-fg">Всеки ъгъл</h2>
               </div>
-              <span className="hidden text-sm text-fg-subtle sm:block">{vehicle.images.length} снимки</span>
+              <span className="hidden text-sm text-fg-subtle sm:block">{vehicle.images.length} снимки · скрол →</span>
             </div>
           </FadeIn>
-          <VehicleGalleryMosaic images={vehicle.images} alt={fullLabel} />
         </div>
+        <VehicleScrollGallery images={vehicle.images} alt={fullLabel} />
       </section>
 
       {/* ═══════════  ENGINE SOUND (dark island)  ═══════════ */}
@@ -282,7 +286,7 @@ export default async function VehicleDetailPage({ params }: PageProps) {
                 <div className="relative mb-6 flex flex-wrap items-end justify-between gap-4">
                   <div>
                     <span className="vd-eyebrow text-accent">[ Сигнатура ]</span>
-                    <h2 className="mt-3 font-display text-2xl font-extrabold tracking-tight text-fg md:text-4xl">Чуйте двигателя</h2>
+                    <h2 className="mt-3 font-mega text-3xl text-fg md:text-5xl">Чуйте двигателя</h2>
                     <p className="mt-2 max-w-md text-sm text-fg-muted">Истински запис на този автомобил — не симулация. Натиснете play.</p>
                   </div>
                   <span className="rounded-full border border-line-strong px-3.5 py-2 text-xs text-fg-muted">{vehicle.power} к.с.</span>
@@ -301,7 +305,7 @@ export default async function VehicleDetailPage({ params }: PageProps) {
             <div>
               <FadeIn>
                 <span className="vd-eyebrow">[ Оборудване ]</span>
-                <h2 className="mt-3 font-display text-[clamp(1.9rem,4vw,3.2rem)] font-extrabold uppercase leading-none tracking-tight text-fg">
+                <h2 className="mt-3 font-mega text-[clamp(2rem,4.4vw,3.4rem)] leading-none text-fg">
                   Детайлите
                 </h2>
               </FadeIn>
@@ -320,7 +324,7 @@ export default async function VehicleDetailPage({ params }: PageProps) {
             <div>
               <FadeIn>
                 <span className="vd-eyebrow">[ Спецификация ]</span>
-                <h2 className="mt-3 font-display text-[clamp(1.9rem,4vw,3.2rem)] font-extrabold uppercase leading-none tracking-tight text-fg">
+                <h2 className="mt-3 font-mega text-[clamp(2rem,4.4vw,3.4rem)] leading-none text-fg">
                   Технически данни
                 </h2>
               </FadeIn>
@@ -370,7 +374,7 @@ export default async function VehicleDetailPage({ params }: PageProps) {
           <div>
             <FadeIn>
               <span className="vd-eyebrow">[ Запитване ]</span>
-              <h2 className="mt-3 font-display text-[clamp(2rem,4.4vw,3.4rem)] font-extrabold uppercase leading-[0.96] tracking-tight text-fg">
+              <h2 className="mt-3 font-mega text-[clamp(2.2rem,4.8vw,3.8rem)] leading-[0.94] text-fg">
                 Резервирайте
                 <br />
                 оглед

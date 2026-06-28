@@ -31,6 +31,8 @@
   --font-display: var(--font-manrope), "Manrope", system-ui, sans-serif;
   --font-sans: var(--font-inter), "Inter", system-ui, sans-serif;
   --font-serif: var(--font-playfair), "Playfair Display", Georgia, serif;
+  /* Condensed poster display (product pages) — generates `font-mega`. */
+  --font-mega: var(--font-oswald), "Oswald", "Arial Narrow", system-ui, sans-serif;
 
   /* Editorial display type scale — paired line-height + tracking + weight */
   --text-display-2xs: 1.875rem;
@@ -144,39 +146,42 @@
    light palette; wrap any dark section in `.vd-dark` to get correct light-on-dark
    inside it (the same per-scope override the site already uses for `.light`). */
 .vehicle-detail {
-  --color-base: #f4f1ec;
-  --color-ink: #f4f1ec;            /* mirrors base → used as text ON dark/accent fills */
+  --color-base: #efeee6;
+  --color-ink: #efeee6;            /* mirrors base → used as text ON dark/accent fills */
   --color-surface: #ffffff;
-  --color-elevated: #faf8f3;
-  --color-fg: #16161a;
-  --color-fg-muted: #6c6b64;
-  --color-fg-subtle: #9c9a90;
-  --color-accent: #2f6ae0;
-  --color-accent-warm: #4d84f0;
-  --color-accent-deep: #1f57c4;
-  --color-line: rgb(18 18 22 / 0.10);
-  --color-line-strong: rgb(18 18 22 / 0.17);
+  --color-elevated: #f7f6ef;
+  --color-fg: #15161a;
+  --color-fg-muted: #6a6a64;
+  --color-fg-subtle: #9a9a90;
+  --color-accent: #15161a;         /* monochrome emphasis = ink on cream */
+  --color-accent-warm: #2b2c2e;
+  --color-accent-deep: #000000;
+  --color-line: rgb(18 18 20 / 0.10);
+  --color-line-strong: rgb(18 18 20 / 0.17);
   color-scheme: light;
   background: var(--color-base);
 
-  /* restrained blue accent — small interactive cues only */
-  --va: #2f6ae0; --va-bright: #4d84f0; --va-deep: #1f57c4; --va-soft: #84b0f7; --va-pale: #c4dafb; --va-glow: 47 106 224;
-  /* bronze-gold secondary — tuned to read on cream */
-  --vg: #a9824c; --vg-soft: #b8945e; --vg-deep: #876541; --vg-pale: #e7d8bd; --vg-glow: 169 130 76;
+  /* monochrome accent ramp (ink) + neutral secondary — auto-recolors components */
+  --va: #15161a; --va-bright: #2b2c2e; --va-deep: #000000; --va-soft: #4a4a46; --va-pale: #cfcfc7; --va-glow: 21 22 26;
+  --vg: #6a6a64; --vg-soft: #7a7a72; --vg-deep: #55554f; --vg-pale: #d8d8cf; --vg-glow: 106 106 100;
 }
 
-/* Dark island — re-applies the graphite palette for hero / drama bands. */
+/* Dark island — graphite + titanium palette for hero / drama bands. */
 .vd-dark {
-  --color-base: #0a0c10;
-  --color-ink: #0a0c10;
-  --color-surface: #14171c;
-  --color-elevated: #1b1f25;
-  --color-fg: #f4f6f8;
-  --color-fg-muted: #aab1ba;
-  --color-fg-subtle: #727981;
-  --color-line: rgb(245 247 249 / 0.10);
-  --color-line-strong: rgb(245 247 249 / 0.18);
-  --vg: #d8b682; --vg-soft: #c9a86e; --vg-deep: #a08a5e; --vg-pale: #f4e9d4; --vg-glow: 216 182 130;
+  --color-base: #111214;
+  --color-ink: #111214;
+  --color-surface: #181a1d;
+  --color-elevated: #202327;
+  --color-fg: #eef0f2;
+  --color-fg-muted: #a7aab0;
+  --color-fg-subtle: #70737a;
+  --color-accent: #c9cfd6;         /* titanium */
+  --color-accent-warm: #dee2e7;
+  --color-accent-deep: #9aa1a9;
+  --color-line: rgb(238 240 242 / 0.10);
+  --color-line-strong: rgb(238 240 242 / 0.18);
+  --va: #c9cfd6; --va-bright: #dee2e7; --va-deep: #9aa1a9; --va-soft: #c9cfd6; --va-pale: #eef0f2; --va-glow: 201 207 214;
+  --vg: #c9cfd6; --vg-soft: #dee2e7; --vg-deep: #9aa1a9; --vg-pale: #eef0f2; --vg-glow: 201 207 214;
   color-scheme: dark;
 }
 
@@ -216,6 +221,26 @@
   font-weight: 600;
   color: var(--color-fg-subtle);
 }
+
+/* Corner-notched "UI box" — the landonorris floating stat-card shape. */
+.vd-notch {
+  clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%);
+}
+.vd-notch-bl {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+}
+
+/* Mega display headline — condensed Oswald, tight, uppercase. */
+.font-mega {
+  font-family: var(--font-mega);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  line-height: 0.92;
+}
+
+/* Word-mask reveal wrapper (split-text). Each word sits in an overflow-clip span. */
+.vd-word { display: inline-block; overflow: hidden; vertical-align: top; }
 
 /* Brushed-titanium numeral fill (price/stat hero numbers). */
 .text-titanium-num {
@@ -265,7 +290,7 @@
 
 /* Oversized outlined "ghost" type — futuristic watermark behind hero/sections. */
 .text-stroke {
-  -webkit-text-stroke: 1px rgb(245 247 249 / 0.16);
+  -webkit-text-stroke: 1px var(--color-line-strong);
   color: transparent;
 }
 .text-stroke-accent {

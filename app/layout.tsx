@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Manrope, Playfair_Display } from "next/font/google";
+import { Inter, Manrope, Playfair_Display, Oswald } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
@@ -21,6 +21,15 @@ const playfair = Playfair_Display({
   display: "swap",
   style: ["normal", "italic"],
   weight: ["400"],
+});
+
+// Condensed bold display — the "Brier-like" poster headline face for product
+// pages. Cyrillic subset is required for the Bulgarian section titles.
+const oswald = Oswald({
+  subsets: ["latin", "cyrillic"],
+  variable: "--font-oswald",
+  display: "swap",
+  weight: ["500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -61,7 +70,7 @@ export default function RootLayout({
   return (
     <html
       lang="bg"
-      className={`${inter.variable} ${manrope.variable} ${playfair.variable} antialiased`}
+      className={`${inter.variable} ${manrope.variable} ${playfair.variable} ${oswald.variable} antialiased`}
       suppressHydrationWarning
     >
       <body className="min-h-screen bg-base text-fg font-sans">{children}</body>

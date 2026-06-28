@@ -38,8 +38,8 @@ export function VehicleProvenance({ vehicle }: { vehicle: Vehicle }) {
           </div>
         </FadeIn>
         <Reveal>
-          <h2 className="mt-5 font-display text-display-2xs font-bold leading-tight text-fg md:text-display-xs">
-            Сертифицирано състояние.
+          <h2 className="mt-5 font-mega text-[clamp(2rem,4.4vw,3.4rem)] leading-[0.95] text-fg">
+            Сертифицирано състояние
           </h2>
         </Reveal>
         <FadeIn delay={0.1}>

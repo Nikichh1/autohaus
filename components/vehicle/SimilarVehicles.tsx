@@ -7,7 +7,7 @@ export function SimilarVehicles({ vehicles }: { vehicles: Vehicle[] }) {
   return (
     <div>
       <FadeIn>
-        <h2 className="font-display text-display-xs font-bold text-fg md:text-display-sm">
+        <h2 className="font-mega text-[clamp(2rem,4.4vw,3.4rem)] leading-none text-fg">
           Подобни автомобили
         </h2>
       </FadeIn>

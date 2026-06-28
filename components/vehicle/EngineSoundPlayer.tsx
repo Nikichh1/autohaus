@@ -136,12 +136,12 @@ export function EngineSoundPlayer({
           aria-pressed={playing}
           style={
             accent
-              ? { background: "linear-gradient(180deg,var(--va,var(--color-accent)),var(--va-deep,var(--color-accent-deep)))", color: "#fff" }
+              ? { background: "linear-gradient(180deg,var(--va,var(--color-accent)),var(--va-deep,var(--color-accent-deep)))", color: "var(--color-base)" }
               : undefined
           }
           className={cn(
             "relative flex shrink-0 items-center justify-center rounded-full shadow-[0_10px_30px_-12px_rgba(0,0,0,0.6)] transition-transform duration-200 hover:scale-105 active:scale-95",
-            accent ? "text-white" : "bg-fg text-ink",
+            accent ? "" : "bg-fg text-ink",
             compact ? "size-12" : "size-14 sm:size-16",
           )}
         >
