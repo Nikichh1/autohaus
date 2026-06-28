@@ -35,9 +35,12 @@ export async function updateSettings(group: SettingsGroup, data: unknown): Promi
     });
 
     // The footer renders in the public layout → revalidate the whole tree, plus
-    // the contact page and the admin settings screen.
+    // the contact page and the admin settings screen. Financing settings also feed
+    // every product page's calculator + indicative monthly, so refresh that route
+    // pattern explicitly (covers it even if those pages become statically rendered).
     revalidatePath("/", "layout");
     revalidatePath("/kontakti");
+    revalidatePath("/avtomobili/[slug]", "page");
     revalidatePath("/admin/settings");
 
     return { ok: true };

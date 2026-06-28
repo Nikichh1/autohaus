@@ -10,9 +10,12 @@ import { ease } from "@/lib/motion";
 type VehicleGalleryProps = {
   images: string[];
   alt: string;
+  /** `sizes` for the main (LCP) image. Defaults to full-bleed; pass the real
+   *  rendered width when the stage sits in a column so phones fetch fewer bytes. */
+  sizes?: string;
 };
 
-export function VehicleGallery({ images, alt }: VehicleGalleryProps) {
+export function VehicleGallery({ images, alt, sizes = "100vw" }: VehicleGalleryProps) {
   const [active, setActive] = useState(0);
   const [lightbox, setLightbox] = useState(false);
   const touchStartX = useRef<number | null>(null);
@@ -86,7 +89,7 @@ export function VehicleGallery({ images, alt }: VehicleGalleryProps) {
               alt={alt}
               fill
               priority
-              sizes="100vw"
+              sizes={sizes}
               className="object-cover"
             />
           </motion.div>

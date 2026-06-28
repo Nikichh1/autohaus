@@ -4,15 +4,17 @@ import { useState, useTransition } from "react";
 import { Plus, Trash2, Save } from "lucide-react";
 import { Card } from "@/components/admin/ui/card";
 import { Button } from "@/components/admin/ui/button";
-import { Field, Input, Textarea } from "@/components/admin/ui/input";
+import { Field, Input, Select, Textarea } from "@/components/admin/ui/input";
 import { toast } from "@/components/admin/ui/toast";
 import { updateSettings } from "@/lib/settings/actions";
+import { FINANCING_TERMS } from "@/lib/settings/config";
 import type {
   SiteSettings,
   ContactSettings,
   SocialSettings,
   HoursSettings,
   BrandingSettings,
+  FinancingSettings,
   SettingsGroup,
 } from "@/lib/settings/config";
 
@@ -60,7 +62,61 @@ export function SettingsForms({ initial }: { initial: SiteSettings }) {
       <HoursSection initial={initial.hours} />
       <SocialSection initial={initial.social} />
       <BrandingSection initial={initial.branding} />
+      <FinancingSection initial={initial.financing} />
     </div>
+  );
+}
+
+function FinancingSection({ initial }: { initial: FinancingSettings }) {
+  // Kept as strings while editing so the inputs stay controlled and empty states
+  // don't flash NaN; the server schema coerces back to numbers on save.
+  const [f, setF] = useState({
+    annualRatePct: String(initial.annualRatePct),
+    downPaymentPct: String(initial.downPaymentPct),
+    termMonths: String(initial.termMonths),
+  });
+  const set = (k: keyof typeof f, v: string) => setF((p) => ({ ...p, [k]: v }));
+  return (
+    <Section
+      title="Лизинг и финансиране"
+      description="Управлява публичния калкулатор за лизинг и ориентировъчната месечна вноска на всяка продуктова страница. Стойностите са примерни, не са обвързваща оферта."
+      group="financing"
+      data={f}
+    >
+      <div className="grid gap-4 sm:grid-cols-3">
+        <Field label="Годишна лихва (%)">
+          <Input
+            type="number"
+            step="0.1"
+            min="0"
+            max="100"
+            inputMode="decimal"
+            value={f.annualRatePct}
+            onChange={(e) => set("annualRatePct", e.target.value)}
+          />
+        </Field>
+        <Field label="Първоначална вноска (%)">
+          <Input
+            type="number"
+            step="1"
+            min="0"
+            max="90"
+            inputMode="numeric"
+            value={f.downPaymentPct}
+            onChange={(e) => set("downPaymentPct", e.target.value)}
+          />
+        </Field>
+        <Field label="Срок по подразбиране">
+          <Select value={f.termMonths} onChange={(e) => set("termMonths", e.target.value)}>
+            {FINANCING_TERMS.map((t) => (
+              <option key={t} value={t}>
+                {t} месеца
+              </option>
+            ))}
+          </Select>
+        </Field>
+      </div>
+    </Section>
   );
 }
 

@@ -30,7 +30,7 @@ export default async function SettingsPage() {
     <div className="mx-auto max-w-3xl">
       <PageHeader
         title="Настройки"
-        description="Управлявайте контактите, работното време и брандинга на сайта."
+        description="Управлявайте контактите, работното време, брандинга и условията за лизинг на сайта."
       />
       <SettingsForms initial={settings} />
 

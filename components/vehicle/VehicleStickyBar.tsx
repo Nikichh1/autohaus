@@ -7,7 +7,14 @@ import type { Vehicle } from "@/types";
 import { displayPrice } from "@/lib/utils";
 import { contactInfo } from "@/lib/nav";
 
-export function VehicleStickyBar({ vehicle }: { vehicle: Vehicle }) {
+export function VehicleStickyBar({
+  vehicle,
+  phone = contactInfo.phone,
+}: {
+  vehicle: Vehicle;
+  /** Admin-managed phone (Настройки → Контакти); falls back to the static default. */
+  phone?: string;
+}) {
   const [show, setShow] = useState(false);
   const { scrollY } = useScroll();
 
@@ -44,7 +51,7 @@ export function VehicleStickyBar({ vehicle }: { vehicle: Vehicle }) {
 
             <div className="flex shrink-0 items-center gap-2">
               <a
-                href={`tel:${contactInfo.phone.replace(/\s/g, "")}`}
+                href={`tel:${phone.replace(/\s/g, "")}`}
                 className="inline-flex h-11 items-center gap-2 rounded-full border border-line-strong px-4 text-sm text-fg transition-colors hover:border-accent hover:text-accent"
               >
                 <Phone className="size-4" />

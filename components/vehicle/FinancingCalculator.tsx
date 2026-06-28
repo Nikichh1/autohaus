@@ -5,25 +5,50 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { formatPriceEUR } from "@/lib/utils";
 
-// TODO: confirm real indicative interest rate with finance partner
-const ANNUAL_RATE = 0.069;
-const TERMS = [12, 24, 36, 48, 60, 72, 84];
+// Fallbacks mirror the defaults in lib/settings/config.ts. In practice the product
+// page passes the admin-managed values (Настройки → Лизинг и финансиране) as props,
+// so editing the rate there updates every calculator site-wide.
+const DEFAULT_RATE_PCT = 6.9;
+const DEFAULT_DOWN_PCT = 20;
+const DEFAULT_TERM = 60;
+const DEFAULT_TERMS = [12, 24, 36, 48, 60, 72, 84];
 
-export function FinancingCalculator({ price }: { price: number }) {
-  const [downPct, setDownPct] = useState(20);
-  const [term, setTerm] = useState(60);
+export function FinancingCalculator({
+  price,
+  annualRatePct = DEFAULT_RATE_PCT,
+  downPaymentPct = DEFAULT_DOWN_PCT,
+  termMonths = DEFAULT_TERM,
+  terms = DEFAULT_TERMS,
+}: {
+  price: number;
+  /** Indicative annual interest rate, in percent (e.g. 6.9). */
+  annualRatePct?: number;
+  /** Initial down-payment, in percent. */
+  downPaymentPct?: number;
+  /** Initially-selected loan term, in months. */
+  termMonths?: number;
+  /** Loan terms offered as quick-select buttons. */
+  terms?: number[];
+}) {
+  const [downPct, setDownPct] = useState(downPaymentPct);
+  const [term, setTerm] = useState(termMonths);
+
+  // Let the down-payment slider always reach the configured starting value.
+  const sliderMax = Math.max(60, downPaymentPct);
 
   const { down, financed, monthly } = useMemo(() => {
     const down = Math.round((price * downPct) / 100);
     const financed = price - down;
-    const r = ANNUAL_RATE / 12;
+    const r = annualRatePct / 100 / 12;
     const n = term;
     const monthly =
-      financed > 0
+      financed > 0 && r > 0
         ? (financed * (r * Math.pow(1 + r, n))) / (Math.pow(1 + r, n) - 1)
-        : 0;
+        : financed > 0
+          ? financed / n // 0% interest → straight-line
+          : 0;
     return { down, financed, monthly: Math.round(monthly) };
-  }, [price, downPct, term]);
+  }, [price, downPct, term, annualRatePct]);
 
   return (
     <div className="panel-metal edge-light rounded-[1.25rem] p-6 md:p-10">
@@ -48,7 +73,7 @@ export function FinancingCalculator({ price }: { price: number }) {
               id="down"
               type="range"
               min={0}
-              max={60}
+              max={sliderMax}
               step={5}
               value={downPct}
               onChange={(e) => setDownPct(Number(e.target.value))}
@@ -62,7 +87,7 @@ export function FinancingCalculator({ price }: { price: number }) {
               Срок (месеци)
             </label>
             <div className="mt-3 flex flex-wrap gap-2">
-              {TERMS.map((t) => (
+              {terms.map((t) => (
                 <button
                   key={t}
                   type="button"
@@ -95,7 +120,7 @@ export function FinancingCalculator({ price }: { price: number }) {
               </div>
               <div className="flex justify-between">
                 <dt className="text-fg-muted">Лихва (год.)</dt>
-                <dd className="text-fg">{(ANNUAL_RATE * 100).toFixed(1)}%</dd>
+                <dd className="text-fg">{annualRatePct.toFixed(1)}%</dd>
               </div>
             </dl>
           </div>

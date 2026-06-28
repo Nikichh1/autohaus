@@ -39,11 +39,24 @@ export const brandingSchema = z.object({
   tagline: z.string().trim().max(400).default(""),
 });
 
+/** Loan terms (months) offered by the public financing calculator. */
+export const FINANCING_TERMS = [12, 24, 36, 48, 60, 72, 84] as const;
+
+// Drives the public FinancingCalculator AND the indicative monthly teaser on each
+// product page. Editing the rate here updates every price estimate site-wide — the
+// figures are indicative only, never a binding offer.
+export const financingSchema = z.object({
+  annualRatePct: z.coerce.number().min(0).max(100).default(6.9),
+  downPaymentPct: z.coerce.number().int().min(0).max(90).default(20),
+  termMonths: z.coerce.number().int().min(6).max(120).default(60),
+});
+
 export const SETTINGS_SCHEMAS = {
   contact: contactSchema,
   social: socialSchema,
   hours: hoursSchema,
   branding: brandingSchema,
+  financing: financingSchema,
 } as const;
 
 export type SettingsGroup = keyof typeof SETTINGS_SCHEMAS;
@@ -53,12 +66,14 @@ export type ContactSettings = z.infer<typeof contactSchema>;
 export type SocialSettings = z.infer<typeof socialSchema>;
 export type HoursSettings = z.infer<typeof hoursSchema>;
 export type BrandingSettings = z.infer<typeof brandingSchema>;
+export type FinancingSettings = z.infer<typeof financingSchema>;
 
 export type SiteSettings = {
   contact: ContactSettings;
   social: SocialSettings;
   hours: HoursSettings;
   branding: BrandingSettings;
+  financing: FinancingSettings;
 };
 
 export const DEFAULT_SETTINGS: SiteSettings = {
@@ -90,6 +105,11 @@ export const DEFAULT_SETTINGS: SiteSettings = {
     tagline:
       "Премиум автомобили, лизинг, застраховки и сервиз — събрани под един покрив в Пловдив.",
   },
+  financing: {
+    annualRatePct: 6.9,
+    downPaymentPct: 20,
+    termMonths: 60,
+  },
 };
 
 export const SETTINGS_LABELS: Record<SettingsGroup, string> = {
@@ -97,4 +117,5 @@ export const SETTINGS_LABELS: Record<SettingsGroup, string> = {
   hours: "Работно време",
   social: "Социални мрежи",
   branding: "Брандинг",
+  financing: "Лизинг и финансиране",
 };

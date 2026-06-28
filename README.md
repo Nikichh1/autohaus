@@ -183,7 +183,7 @@ Search the codebase for `TODO` — every placeholder is marked. The key ones:
 2. **Photography** — all imagery is **real AutoHaus photos**, cinematically graded into `public/photos/*.webp`. Source originals live in `public/brand/`; the grade (contrast, deepened blacks, vignette) is applied by `scripts/process-photos.mjs` (`node scripts/process-photos.mjs`, uses `sharp`). To add/replace: drop a source in `public/brand/`, add a mapping entry in that script, re-run it, then reference `/photos/<name>.webp` in `data/vehicles.ts` / `data/services.ts` / the section components. No external image hosts are used.
 3. **Service imagery & copy** — `data/services.ts`.
 4. **Stats** — `components/sections/WhyAutoHaus.tsx` (`stats` array: years, cars sold, brands, satisfaction).
-5. **Financing rate** — `components/vehicle/FinancingCalculator.tsx` (`ANNUAL_RATE`). The calculator is indicative only.
+5. **Financing rate** — managed from the admin: **Настройки → Лизинг и финансиране** (annual rate, default down‑payment %, default term). Drives both the public `FinancingCalculator` and the indicative monthly payment shown on each vehicle page. Defaults live in `lib/settings/config.ts` (`financingSchema`); the calculator is indicative only.
 6. **Forms** — `ContactForm` and `VehicleInquiryForm` currently show a success state on submit. Wire `handleSubmit` to a real endpoint (e.g. `POST /api/contact` or an email service).
 7. **Legal pages** — `za-nas`, `kariera`, `novini`, `politika-poveritelnost`, `obshti-usloviya`, `bisquitki` are branded "in preparation" placeholders.
 8. **Logo / hero** — real assets live in `public/brand/` (`logo.svg`, `home-bg.jpg`).
