@@ -57,7 +57,7 @@ export function ProductLoader({ slug, brand, model }: { slug: string; brand: str
       {show && (
         <motion.div
           key="loader"
-          className="fixed inset-0 z-[120] flex flex-col items-center justify-center vd-hero-field"
+          className="fixed inset-0 z-[120] flex flex-col items-center justify-center bg-base"
           initial={{ clipPath: "inset(0 0 0% 0)" }}
           exit={{ clipPath: "inset(0 0 100% 0)" }}
           transition={{ duration: 0.9, ease: ease.entrance }}
@@ -78,7 +78,7 @@ export function ProductLoader({ slug, brand, model }: { slug: string; brand: str
           </motion.div>
 
           {/* progress line */}
-          <div className="relative mt-8 h-px w-48 overflow-hidden bg-white/10">
+          <div className="relative mt-8 h-px w-48 overflow-hidden bg-black/10">
             <motion.div
               className="absolute inset-y-0 left-0"
               style={{ width: `${count}%`, background: "linear-gradient(90deg,var(--va),var(--va-bright))" }}

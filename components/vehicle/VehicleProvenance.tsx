@@ -65,13 +65,13 @@ export function VehicleProvenance({ vehicle }: { vehicle: Vehicle }) {
       </div>
 
       <div className="lg:col-span-6 lg:col-start-7">
-        <ul className="edge-light grid gap-px overflow-hidden rounded-[1.25rem] border border-line-strong bg-line shadow-cinema">
+        <ul className="vd-card overflow-hidden rounded-[1.5rem]">
           {checks.map((c, i) => (
             <FadeIn key={c} delay={i * 0.06}>
-              <li className="flex items-center gap-4 bg-gradient-to-b from-[#16191e] to-[#0f1216] px-6 py-5 transition-colors hover:from-[#1b1f25]">
+              <li className="flex items-center gap-4 border-b border-line px-6 py-5 transition-colors last:border-0 hover:bg-elevated">
                 <span
-                  className="flex size-7 shrink-0 items-center justify-center rounded-full"
-                  style={{ background: "rgb(var(--vg-glow, 201 169 97) / 0.12)", color: "var(--vg, var(--color-accent))" }}
+                  className="flex size-8 shrink-0 items-center justify-center rounded-full"
+                  style={{ background: "rgb(var(--vg-glow, 169 130 76) / 0.14)", color: "var(--vg, var(--color-accent))" }}
                 >
                   <Check className="size-4" strokeWidth={2.5} />
                 </span>

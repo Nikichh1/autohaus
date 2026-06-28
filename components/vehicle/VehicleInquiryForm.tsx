@@ -54,7 +54,7 @@ export function VehicleInquiryForm({
 
   if (sent) {
     return (
-      <div className="panel-metal edge-light flex flex-col items-start gap-4 rounded-[1.25rem] p-8 md:p-10">
+      <div className="vd-card flex flex-col items-start gap-4 rounded-[1.5rem] p-8 md:p-10">
         <div className="flex size-12 items-center justify-center rounded-full bg-accent/15 text-accent">
           <Check className="size-6" />
         </div>
@@ -71,7 +71,7 @@ export function VehicleInquiryForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="panel-metal edge-light rounded-[1.25rem] p-6 md:p-8"
+      className="vd-card rounded-[1.5rem] p-6 md:p-8"
     >
       {!bare && (
         <>
@@ -120,7 +120,7 @@ export function VehicleInquiryForm({
       <button
         type="submit"
         disabled={sending}
-        className="btn-accent mt-6 flex h-[52px] w-full items-center justify-center rounded-full text-sm font-semibold disabled:opacity-60"
+        className="vd-pill mt-6 flex h-[52px] w-full items-center justify-center rounded-full text-sm font-semibold disabled:opacity-60"
       >
         {sending ? "Изпращане…" : "Изпрати запитване"}
       </button>

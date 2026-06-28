@@ -139,37 +139,82 @@
    carries trust, rental and provenance. Scoping --color-accent here means every
    existing `*-accent` utility inside a product page turns blue automatically —
    the same per-scope variable override the site already uses for `.light`. */
+/* Product page — LIGHT, sectioned luxury: a warm cream canvas with dark "islands"
+   for drama. Scoping the theme tokens here flips every token-based child to the
+   light palette; wrap any dark section in `.vd-dark` to get correct light-on-dark
+   inside it (the same per-scope override the site already uses for `.light`). */
 .vehicle-detail {
-  /* retint the brand accent to blue, scoped to this subtree only */
-  --color-accent: #3b7df0;
-  --color-accent-warm: #5b94f4;
-  --color-accent-deep: #2360cf;
+  --color-base: #f4f1ec;
+  --color-ink: #f4f1ec;            /* mirrors base → used as text ON dark/accent fills */
+  --color-surface: #ffffff;
+  --color-elevated: #faf8f3;
+  --color-fg: #16161a;
+  --color-fg-muted: #6c6b64;
+  --color-fg-subtle: #9c9a90;
+  --color-accent: #2f6ae0;
+  --color-accent-warm: #4d84f0;
+  --color-accent-deep: #1f57c4;
+  --color-line: rgb(18 18 22 / 0.10);
+  --color-line-strong: rgb(18 18 22 / 0.17);
+  color-scheme: light;
+  background: var(--color-base);
 
-  /* vehicle accent (blue) — explicit ramp for gradients, glows, tints */
-  --va: #3b7df0;
-  --va-bright: #5b94f4;
-  --va-deep: #2360cf;
-  --va-soft: #84b0f7;
-  --va-pale: #c4dafb;
-  --va-glow: 59 125 240; /* rgb triplet → rgb(var(--va-glow)/.x) */
-
-  /* champagne-gold secondary — trust / rental / provenance / financing result */
-  --vg: #d8b682;
-  --vg-soft: #c9a86e;
-  --vg-deep: #a08a5e;
-  --vg-pale: #f4e9d4;
-  --vg-glow: 216 182 130;
+  /* restrained blue accent — small interactive cues only */
+  --va: #2f6ae0; --va-bright: #4d84f0; --va-deep: #1f57c4; --va-soft: #84b0f7; --va-pale: #c4dafb; --va-glow: 47 106 224;
+  /* bronze-gold secondary — tuned to read on cream */
+  --vg: #a9824c; --vg-soft: #b8945e; --vg-deep: #876541; --vg-pale: #e7d8bd; --vg-glow: 169 130 76;
 }
 
-/* Hero field — graphite lifted by an accent-tinted top glow (car-tinted mood). */
-.vd-hero-field {
-  background:
-    radial-gradient(120% 80% at 50% -8%, rgb(var(--va-glow) / 0.18) 0%, rgb(var(--va-glow) / 0.05) 26%, transparent 52%),
-    radial-gradient(130% 95% at 50% -14%, #23282f 0%, #15191f 44%, #0c0f14 100%);
+/* Dark island — re-applies the graphite palette for hero / drama bands. */
+.vd-dark {
+  --color-base: #0a0c10;
+  --color-ink: #0a0c10;
+  --color-surface: #14171c;
+  --color-elevated: #1b1f25;
+  --color-fg: #f4f6f8;
+  --color-fg-muted: #aab1ba;
+  --color-fg-subtle: #727981;
+  --color-line: rgb(245 247 249 / 0.10);
+  --color-line-strong: rgb(245 247 249 / 0.18);
+  --vg: #d8b682; --vg-soft: #c9a86e; --vg-deep: #a08a5e; --vg-pale: #f4e9d4; --vg-glow: 216 182 130;
+  color-scheme: dark;
 }
-/* Soft graphite editorial field for the deep-dive sections. */
-.vd-field {
-  background: radial-gradient(120% 90% at 50% 0%, #1a1e25 0%, #13161c 55%, #0f1217 100%);
+
+/* Dark hero card surface — graphite with quiet depth. */
+.vd-hero-card {
+  background: radial-gradient(125% 95% at 76% 8%, #20242c 0%, #14171c 46%, #0a0c10 100%);
+}
+
+/* Light editorial card — white, hairline, soft luxe shadow; lifts on hover. */
+.vd-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  box-shadow: 0 1px 2px rgb(18 18 22 / 0.04), 0 20px 44px -30px rgb(18 18 22 / 0.26);
+  transition: transform 0.5s var(--ease-out-expo), box-shadow 0.5s var(--ease-out-expo);
+}
+.vd-card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 2px 4px rgb(18 18 22 / 0.05), 0 34px 70px -34px rgb(18 18 22 / 0.34);
+}
+@media (prefers-reduced-motion: reduce) { .vd-card-hover:hover { transform: none; } }
+
+/* Primary pill — auto-inverts with the active theme (dark pill on cream,
+   light pill on dark). Mirrors the monochrome CTAs in the references. */
+.vd-pill {
+  background: var(--color-fg);
+  color: var(--color-base);
+  transition: transform 0.3s var(--ease-out-expo), opacity 0.3s, box-shadow 0.3s;
+}
+.vd-pill:hover { transform: translateY(-2px); box-shadow: 0 16px 34px -16px rgb(18 18 22 / 0.4); }
+@media (prefers-reduced-motion: reduce) { .vd-pill:hover { transform: none; } }
+
+/* Refined bracketed micro-label — "[ ABOUT ]" treatment from the references. */
+.vd-eyebrow {
+  font-size: 0.6875rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--color-fg-subtle);
 }
 
 /* Brushed-titanium numeral fill (price/stat hero numbers). */

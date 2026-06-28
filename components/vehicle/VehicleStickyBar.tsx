@@ -37,7 +37,7 @@ export function VehicleStickyBar({
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           className="pointer-events-none fixed inset-x-0 bottom-0 z-40 flex justify-center px-3 pb-3 md:px-8"
         >
-          <div className="glass-pane pointer-events-auto flex w-full max-w-wide items-center justify-between gap-4 rounded-full py-2.5 pl-5 pr-2.5 backdrop-blur-2xl backdrop-saturate-150 md:pl-7">
+          <div className="vd-dark glass-pane pointer-events-auto flex w-full max-w-wide items-center justify-between gap-4 rounded-full py-2.5 pl-5 pr-2.5 backdrop-blur-2xl backdrop-saturate-150 md:pl-7">
             <div className="flex min-w-0 items-center gap-3">
               <span className="truncate font-display text-sm font-bold text-fg">
                 {label}
@@ -60,11 +60,7 @@ export function VehicleStickyBar({
               </a>
               <a
                 href="#inquiry"
-                style={{
-                  background:
-                    "linear-gradient(180deg,var(--va,var(--color-accent)),var(--va-deep,var(--color-accent-deep)))",
-                }}
-                className="inline-flex h-11 items-center gap-2 rounded-full px-5 text-sm font-semibold text-white"
+                className="vd-pill inline-flex h-11 items-center gap-2 rounded-full px-5 text-sm font-semibold"
               >
                 <CalendarCheck className="size-4" />
                 Запази оглед
