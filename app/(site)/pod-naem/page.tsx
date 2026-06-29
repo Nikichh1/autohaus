@@ -9,7 +9,7 @@ import { FadeIn } from "@/components/motion/FadeIn";
 import { Reveal } from "@/components/motion/Reveal";
 import { ChapterLabel } from "@/components/ui/ChapterLabel";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "Автомобили под наем",

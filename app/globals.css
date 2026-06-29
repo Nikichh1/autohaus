@@ -230,6 +230,12 @@
   clip-path: polygon(0 0, 100% 0, 100% 100%, 16px 100%, 0 calc(100% - 16px));
 }
 
+/* Cut-corner "telemetry" panels — a notched top-right corner (sharp 2–3px feel). */
+.vd-cut { clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%); }
+.vd-cut-lg { clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%); }
+/* Both top corners chamfered — used on the closing CTA panel. */
+.vd-cut-both { clip-path: polygon(0 26px, 26px 0, calc(100% - 26px) 0, 100% 26px, 100% 100%, 0 100%); }
+
 /* Mega display headline — condensed Oswald, tight, uppercase. */
 .font-mega {
   font-family: var(--font-mega);
@@ -334,6 +340,12 @@
 }
 .vd-float { animation: vd-float 7s ease-in-out infinite; will-change: transform; }
 @media (prefers-reduced-motion: reduce) { .vd-float { animation: none; } }
+
+/* Continuous slow rotation (rotating badge / moving decorative objects). */
+@keyframes vd-spin { to { transform: rotate(360deg); } }
+.vd-spin { animation: vd-spin 20s linear infinite; will-change: transform; transform-origin: 50% 50%; }
+.vd-spin-rev { animation: vd-spin 26s linear infinite reverse; }
+@media (prefers-reduced-motion: reduce) { .vd-spin, .vd-spin-rev { animation: none; } }
 
 /* Thin scroll-cue line that pulses downward. */
 @keyframes vd-scrollcue {

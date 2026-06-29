@@ -11,7 +11,7 @@ import { FinaleScene } from "@/components/home/FinaleScene";
 import { getFeaturedVehicles, getAllPublicVehicles } from "@/lib/data/vehicles";
 import { getContent } from "@/lib/cms/read";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 export async function generateMetadata(): Promise<Metadata> {
   const cms = await getContent();
