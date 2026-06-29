@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   motion,
   useScroll,
@@ -27,6 +27,19 @@ const WORDS =
 export function Manifesto() {
   const ref = useRef<HTMLParagraphElement>(null);
   const reduce = useReducedMotion();
+  // Phones/touch get the "lite" reveal: words still fade and rise, but the
+  // per-word animated blur() — ~17 composited filter layers updating every
+  // scroll frame — is dropped, since it's the single most expensive scroll
+  // effect on mobile GPUs. Resolved after mount to avoid a hydration mismatch.
+  const [lite, setLite] = useState(false);
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setLite(
+      !window.matchMedia("(min-width: 1024px)").matches ||
+        !window.matchMedia("(pointer: fine)").matches,
+    );
+  }, []);
+  const heavy = !reduce && !lite;
   // Drive the reveal off the PARAGRAPH itself (not the tall section) so the
   // timing is precise: it begins the moment the line peeks in from the bottom
   // and is fully resolved by the time the paragraph reaches the middle of the
@@ -45,8 +58,9 @@ export function Manifesto() {
       {/* machined top + bottom hairlines */}
       <div aria-hidden className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
       <div aria-hidden className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-      {/* slow metallic sheen sweeping the type */}
-      {!reduce && (
+      {/* slow metallic sheen sweeping the type (desktop only — a perpetual
+          blended layer is needless battery/compositor cost on phones) */}
+      {heavy && (
         <motion.div
           aria-hidden
           className="pointer-events-none absolute inset-0 mix-blend-screen"
@@ -120,6 +134,7 @@ export function Manifesto() {
               total={WORDS.length}
               progress={scrollYProgress}
               reduce={!!reduce}
+              blurEnabled={heavy}
             />
           ))}
         </p>
@@ -134,12 +149,14 @@ function Word({
   total,
   progress,
   reduce,
+  blurEnabled,
 }: {
   word: string;
   index: number;
   total: number;
   progress: MotionValue<number>;
   reduce: boolean;
+  blurEnabled: boolean;
 }) {
   // Spread the cascade across most of the scroll with a wide per-word overlap so
   // it reads as a soft, gentle wave (not a staccato snap), finishing while the
@@ -148,20 +165,19 @@ function Word({
   const start = (index / total) * SPAN;
   const end = ((index + 2.6) / total) * SPAN;
   const opacity = useTransform(progress, [start, end], [0.18, 1], { ease: REVEAL_EASE });
-  const blurN = useTransform(progress, [start, end], reduce ? [0, 0] : [10, 0], { ease: REVEAL_EASE });
+  const blurN = useTransform(progress, [start, end], blurEnabled ? [10, 0] : [0, 0], { ease: REVEAL_EASE });
   const filter = useTransform(blurN, (b) => `blur(${b}px)`);
   const y = useTransform(progress, [start, end], reduce ? [0, 0] : [14, 0], { ease: REVEAL_EASE });
 
   return (
     // Outer span owns layout (word gap + the rise/opacity) — never clipped.
     <motion.span style={{ opacity, y }} className="mr-[0.26em] inline-block">
-      {/* Inner span owns the gradient fill + blur. Padding gives the composited
-          filter layer room so descenders and the blur halo are never clipped;
-          the matching negative margin keeps the outer box identical, so nothing
-          on the page shifts position. */}
+      {/* Inner span owns the gradient fill. On desktop it also animates a blur-in
+          (own filter layer, with padding so the halo isn't clipped); on mobile
+          the blur is dropped, so `will-change` is only flagged when it's used. */}
       <motion.span
-        style={{ filter }}
-        className="text-titanium inline-block px-[0.14em] py-[0.3em] -mx-[0.14em] -my-[0.3em] will-change-[filter]"
+        style={blurEnabled ? { filter } : undefined}
+        className={`text-titanium inline-block px-[0.14em] py-[0.3em] -mx-[0.14em] -my-[0.3em] ${blurEnabled ? "will-change-[filter]" : ""}`}
       >
         {word}
       </motion.span>

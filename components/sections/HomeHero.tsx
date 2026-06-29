@@ -65,7 +65,7 @@ export function HomeHero({ content }: { content?: Partial<HeroContent> } = {}) {
           className="absolute inset-0"
         >
           <Image
-            src="/photos/autohaus_lights.jpg"
+            src="/photos/autohaus_lights.webp"
             alt="Шоурумът на AutoHaus по залез — премиум автосалон в Пловдив"
             fill
             priority

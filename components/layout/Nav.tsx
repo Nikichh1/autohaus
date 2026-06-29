@@ -111,6 +111,7 @@ export function Nav() {
                 width={150}
                 height={27}
                 priority
+                unoptimized
                 className="h-6 w-auto md:h-7"
               />
             </Link>

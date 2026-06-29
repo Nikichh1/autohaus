@@ -22,9 +22,18 @@ export const dynamic = "force-dynamic";
 
 export default async function DashboardPage() {
   const user = await getSessionUser();
+  const canCreate = hasPermission(user?.role ?? "", "vehicle.create");
+  const canLeads = hasPermission(user?.role ?? "", "lead.view");
 
-  const [total, available, reserved, sold, draft, featured, recent] =
-    await prisma.$transaction([
+  // Fire every dashboard read concurrently — the vehicle stats batch, plus the
+  // (permission-gated) lead queries — so the page waits on ONE round-trip worth
+  // of latency instead of three sequential ones.
+  const [
+    [total, available, reserved, sold, draft, featured, recent],
+    newLeads,
+    recentLeads,
+  ] = await Promise.all([
+    prisma.$transaction([
       prisma.vehicle.count({ where: { status: { not: "archived" } } }),
       prisma.vehicle.count({ where: { status: "available" } }),
       prisma.vehicle.count({ where: { status: "reserved" } }),
@@ -36,20 +45,18 @@ export default async function DashboardPage() {
         take: 6,
         include: { images: { orderBy: { position: "asc" }, take: 1 } },
       }),
-    ]);
+    ]),
+    canLeads ? prisma.lead.count({ where: { status: "new" } }) : Promise.resolve(0),
+    canLeads
+      ? prisma.lead.findMany({
+          orderBy: { createdAt: "desc" },
+          take: 5,
+          select: { id: true, name: true, status: true, vehicleLabel: true },
+        })
+      : Promise.resolve([] as { id: string; name: string; status: string; vehicleLabel: string | null }[]),
+  ]);
 
-  const canCreate = hasPermission(user?.role ?? "", "vehicle.create");
   const greeting = new Date().getHours() < 12 ? "Добро утро" : new Date().getHours() < 18 ? "Добър ден" : "Добър вечер";
-
-  const canLeads = hasPermission(user?.role ?? "", "lead.view");
-  const newLeads = canLeads ? await prisma.lead.count({ where: { status: "new" } }) : 0;
-  const recentLeads = canLeads
-    ? await prisma.lead.findMany({
-        orderBy: { createdAt: "desc" },
-        take: 5,
-        select: { id: true, name: true, status: true, vehicleLabel: true },
-      })
-    : [];
 
   return (
     <div>

@@ -32,6 +32,7 @@ export async function Footer() {
                 alt="AutoHaus"
                 width={200}
                 height={36}
+                unoptimized
                 className="h-8 w-auto"
               />
             </Link>

@@ -567,13 +567,20 @@ html.lenis, html.lenis body { height: auto; }
     mix-blend-mode: soft-light;
   }
 
-  /* Animate the grain ONLY on precise-pointer devices (desktop). Phones keep a
-     static grain so there's no perpetual full-screen compositor/battery cost. */
+  /* Animate the grain ONLY on precise-pointer devices (desktop). */
   @media (hover: hover) and (pointer: fine) {
     .grain-overlay {
       animation: grain-jitter 0.5s steps(3) infinite;
       will-change: transform;
     }
+  }
+
+  /* Phones drop the film grain entirely. A fixed, full-screen soft-light blend
+     layer forces the compositor to re-blend the whole viewport on every scroll
+     frame — a real source of touch-scroll jank — and at 5% opacity it's barely
+     visible on a small screen anyway. The cheap vignette gradient stays. */
+  @media (hover: none), (pointer: coarse) {
+    .grain-overlay { display: none; }
   }
 
   /* Faint cinematic vignette framing the whole viewport */
@@ -641,6 +648,39 @@ html.lenis, html.lenis body { height: auto; }
     background-clip: text;
     color: transparent;
   }
+}
+
+/* ───────────────  Admin skeleton shimmer  ───────────────
+   Instant loading placeholders for the admin panel. A soft sheen sweeps across
+   a muted block while server data streams in — so navigation never shows a
+   blank frozen screen. Honors reduced-motion. */
+.admin-skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--color-elevated);
+  border-radius: 0.5rem;
+}
+.admin-skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgb(255 255 255 / 0.06),
+    transparent
+  );
+  animation: admin-shimmer 1.5s ease-in-out infinite;
+}
+:root.light .admin-skeleton::after {
+  background: linear-gradient(90deg, transparent, rgb(0 0 0 / 0.05), transparent);
+}
+@keyframes admin-shimmer {
+  100% { transform: translateX(100%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .admin-skeleton::after { animation: none; }
 }
 
 /* Animated equalizer bars — the "engine sound" badge on vehicle cards. */

@@ -67,7 +67,7 @@ export function FinaleScene() {
           transition={{ duration: 2.2, ease: ease.entrance }}
         >
           <Image
-            src="/photos/autohaus_lights.jpg"
+            src="/photos/autohaus_lights.webp"
             alt=""
             fill
             sizes="100vw"
